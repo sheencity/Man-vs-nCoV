@@ -5,7 +5,7 @@
 <script>
 import * as echarts from "echarts";
 // import * as _ from "lodash";
-import { getAreaData } from "../../public/service/getData";
+import { getAreaData, getGeoJson } from "../../public/service/getData";
 
 export default {
   name: "home",
@@ -19,10 +19,9 @@ export default {
   },
   components: {},
   async mounted() {
-    import(`echarts/map/json/china.json`).then(map => {
-      echarts.registerMap("china", map.default);
-    });
-    this.initData();
+    const json = await getGeoJson().then(data => data.data);
+    echarts.registerMap("china", json);
+    await this.initData();
   },
   methods: {
     getCount() {},
@@ -32,7 +31,6 @@ export default {
         name: p.provinceShortName,
         value: p.confirmedCount
       }));
-      console.log(this.liveData, "live-data");
       let province = null;
       return {
         visualMap: {
