@@ -1,23 +1,22 @@
 <template>
   <div id="app">
     <Home></Home>
-    <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
     <Rate />
+    <Hospital />
   </div>
 </template>
 
 <script>
 import Rate from "./components/Rate.vue";
-// import HelloWorld from "./components/HelloWorld.vue";
 import Home from "./components/home";
+import Hospital from "./components/Hospital";
 
 export default {
   name: "app",
   components: {
-    // HelloWorld
     Home,
-    Rate
+    Rate,
+    Hospital
   }
 };
 </script>

@@ -1,18 +1,26 @@
 <template>
   <div id="chart">
-    <div id="totality" :style="{ width: '1200px', height: '800px' }"></div>
-    <div id="grow" :style="{ width: '1200px', height: '800px' }"></div>
+    <div id="totality" :style="{ width: '40%', height: '50vh' }"></div>
+    <div id="grow" :style="{ width: '40%', height: '50vh' }"></div>
   </div>
 </template>
 <script>
-export default {
+  import { getnCovData } from "../../public/service/getData";
+  import * as _ from "lodash";
+  export default {
   name: "Rate",
-  mounted() {
+  async mounted() {
     this.drawLine1();
     this.drawLine2();
   },
   methods: {
-    drawLine1() {
+    async drawLine1() {
+      const nCovData = await getnCovData().then(data => data.data.filter(c => c.date.match(/\d\d\d\d-\d\d-\d\d/)));
+      const nCovday = _.uniq(nCovData.map(c => c.date.substring(5))).splice(45);
+      const nCovConfirmed = _.filter(nCovData, {province: '', country: '中国'}).map(c => c.confirmed).splice(45);
+      const nCovSuspected = _.filter(nCovData, {province: '', country: '中国'}).map(c => c.suspected).splice(45);
+      const nCovCured = _.filter(nCovData, {province: '', country: '中国'}).map(c => c.cured).splice(45);
+      const nCovDead = _.filter(nCovData, {province: '', country: '中国'}).map(c => c.dead).splice(45);
       let myChart = this.$echarts.init(document.getElementById("totality"));
       myChart.setOption({
         backgroundColor: "#000",
@@ -30,7 +38,8 @@ export default {
         },
         legend: {
           orient: "horizontal",
-          x: "850",
+          x: "right",
+          padding: [0, 50, 0, 0],
           y: "50",
           textStyle: {
             color: "#fff"
@@ -48,24 +57,7 @@ export default {
               color: "#999"
             }
           },
-          data: [
-            "1.1",
-            "1.2",
-            "1.3",
-            "1.4",
-            "1.5",
-            "1.6",
-            "1.7",
-            "1.8",
-            "1.9",
-            "1.10",
-            "1.11",
-            "1.12",
-            "1.13",
-            "1.14",
-            "1.15",
-            "1.16"
-          ]
+          data: nCovday,
         },
         yAxis: {
           type: "value",
@@ -84,24 +76,7 @@ export default {
             color: "red",
             symbol: "circle",
             symbolSize: 10,
-            data: [
-              100,
-              156,
-              965,
-              1655,
-              1963,
-              2365,
-              3649,
-              4963,
-              5361,
-              6135,
-              7236,
-              8632,
-              9631,
-              11236,
-              12365,
-              13654
-            ],
+            data: nCovConfirmed,
             type: "line",
             itemStyle: {
               normal: {
@@ -117,24 +92,7 @@ export default {
             color: "yellow",
             symbol: "circle",
             symbolSize: 10,
-            data: [
-              123,
-              196,
-              1230,
-              1955,
-              2963,
-              3665,
-              4849,
-              5963,
-              6361,
-              6935,
-              7136,
-              7632,
-              8631,
-              9236,
-              11365,
-              12354
-            ],
+            data: nCovSuspected,
             type: "line",
             itemStyle: {
               normal: {
@@ -150,24 +108,7 @@ export default {
             color: "green",
             symbol: "circle",
             symbolSize: 10,
-            data: [
-              10,
-              15,
-              65,
-              136,
-              163,
-              236,
-              364,
-              496,
-              536,
-              613,
-              723,
-              863,
-              963,
-              1123,
-              1236,
-              1365
-            ],
+            data: nCovCured,
             type: "line",
             itemStyle: {
               normal: {
@@ -183,24 +124,7 @@ export default {
             color: "grey",
             symbol: "circle",
             symbolSize: 10,
-            data: [
-              1,
-              5,
-              9,
-              16,
-              19,
-              23,
-              36,
-              49,
-              53,
-              61,
-              72,
-              86,
-              96,
-              112,
-              123,
-              136
-            ],
+            data: nCovDead,
             type: "line",
             itemStyle: {
               normal: {
@@ -214,166 +138,125 @@ export default {
         ]
       });
     },
-
-    drawLine2() {
-      let myChart = this.$echarts.init(document.getElementById("grow"));
-      myChart.setOption({
-        backgroundColor: "#000",
-        title: {
-          text: `全国疫情新增趋势图`,
-          subtext: "单位: 例",
-          padding: 20,
-          itemGap: 20,
-          x: 20,
-          y: 3,
-          textStyle: {
-            color: "#fff",
-            fontSize: 14
-          }
-        },
-        legend: {
-          orient: "horizontal",
-          x: "950",
-          y: "50",
-          textStyle: {
-            color: "#fff",
-            margin: "0 5px 0 0"
-          },
-          data: ["新增确诊", "新增疑似"]
-        },
-        grid: {
-          top: "13%"
-        },
-        tooltip: {},
-        xAxis: {
-          type: "category",
-          axisLine: {
-            lineStyle: {
-              color: "#999"
-            }
-          },
-          data: [
-            "1.1",
-            "1.2",
-            "1.3",
-            "1.4",
-            "1.5",
-            "1.6",
-            "1.7",
-            "1.8",
-            "1.9",
-            "1.10",
-            "1.11",
-            "1.12",
-            "1.13",
-            "1.14",
-            "1.15",
-            "1.16"
-          ]
-        },
-        yAxis: {
-          type: "value",
-          axisLabel: {
-            textStyle: {
-              color: "#fff"
-            }
-          },
-          axisLine: {
-            show: false
-          }
-        },
-        series: [
-          {
-            name: "新增确诊",
-            color: "red",
-            symbol: "circle",
-            symbolSize: 10,
-            data: [
-              0,
-              56,
-              65,
-              155,
-              63,
-              236,
-              49,
-              463,
-              361,
-              135,
-              236,
-              863,
-              631,
-              119,
-              365,
-              654
-            ],
-            type: "line",
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true
-                }
-              }
+    decrease(arr) {
+      const b = [0];
+      for(let i = 1; i < arr.length; i++) {
+        b.push(arr[i] - arr[i-1]);
+      }
+      return b;
+    },
+   async drawLine2() {
+        const nCovData = await getnCovData().then(data => data.data.filter(c => c.date.match(/\d\d\d\d-\d\d-\d\d/)));
+        const nCovday = _.uniq(nCovData.map(c => c.date.substring(5))).splice(45);
+        const nCovConfirmed = _.filter(nCovData, {province: '', country: '中国'}).map(c => c.confirmed).splice(45);
+        const nCovConfirmedGrow = this.decrease(nCovConfirmed);
+        const nCovSuspected = _.filter(nCovData, {province: '', country: '中国'}).map(c => c.suspected).splice(45);
+        const nCovSuspectedGrow = this.decrease(nCovSuspected);
+        let myChart = this.$echarts.init(document.getElementById('grow'))
+        myChart.setOption({
+              backgroundColor: '#000',
+              title: { 
+                  text: `全国疫情新增趋势图`,
+                  subtext: '单位: 例',
+                  padding: 20,
+                  itemGap: 20,
+                  x: 20,
+                  y: 3,
+                  textStyle: {
+                      color: '#fff',
+                      fontSize: 14,
+                  }
+              },
+              legend: {
+                  orient: 'horizontal',
+                  x: 'right',
+                  padding: [0, 50, 0, 0],
+                  y: '50',
+                  textStyle: {
+                      color: '#fff',
+                      margin: '0 5px 0 0'
+                  },
+                  data: ['新增确诊', '新增疑似']
+              },
+              grid: {
+                  top: '13%',
+              },
+              tooltip: {},
+              xAxis: {
+                  type: 'category',
+                  axisLine: {
+                      lineStyle: {
+                          color: '#999',
+                      }
+                  },
+                  data: nCovday,
+              },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff',
+                    }
+                },
+                axisLine: {
+                    show: false,
+                  },
             },
-            smooth: false
-          },
-          {
-            name: "新增疑似",
-            color: "yellow",
-            symbol: "circle",
-            symbolSize: 10,
-            data: [
-              0,
-              5,
-              53,
-              41,
-              36,
-              23,
-              61,
-              39,
-              61,
-              35,
-              36,
-              63,
-              31,
-              36,
-              65,
-              54
-            ],
-            type: "line",
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true
-                }
-              }
-            },
-            smooth: false
-          }
-        ]
-      });
+            series: [{
+                name: '新增确诊',
+                color: 'red',
+                symbol: 'circle',
+                symbolSize: 10,
+                data: nCovConfirmedGrow,
+                type: 'line',
+                itemStyle: {
+                    normal: {
+                        label: {
+                            show: true,
+                        }
+                    }
+                },
+                smooth: false,
+            }, {
+                name: '新增疑似',
+                color: 'yellow',
+                symbol: 'circle',
+                symbolSize: 10,
+                data: nCovSuspectedGrow,
+                type: 'line',
+                itemStyle: {
+                    normal: {
+                        label: {
+                            show: true,
+                        }
+                    }
+                },
+                smooth: false,
+            }]
+    })
     }
   }
-};
+}
 </script>
 
+
+
 <style scoped>
-#chart {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: url("../assets/red.png") no-repeat;
-  background-size: cover;
-}
-#totality {
-  margin-top: 50px;
-  border-left: 10px solid #10aaba;
-  border-right: 10px solid #10aaba;
-}
-#grow {
-  margin-top: 50px;
-  border-left: 10px solid #10aaba;
-  border-right: 10px solid #10aaba;
-}
+    #chart {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: url('../assets/red.png') no-repeat;
+        background-size: cover;
+    }
+    #totality {
+        border-left: 10px solid #10aaba;
+        border-right: 20px solid #10aaba;
+    }
+    #grow {
+        border-left: 10px solid #10aaba;
+        border-right: 20px solid #10aaba;
+    }
 </style>
