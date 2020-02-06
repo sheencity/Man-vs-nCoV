@@ -12,13 +12,12 @@ import Rate from "./components/Rate.vue";
 // import HelloWorld from "./components/HelloWorld.vue";
 import Home from "./components/home";
 
-
 export default {
   name: "app",
   components: {
     // HelloWorld
-    Home
-    Rate,
+    Home,
+    Rate
   }
 };
 </script>

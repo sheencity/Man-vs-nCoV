@@ -27,12 +27,12 @@ export default {
   methods: {
     getCount() {},
     async getOption() {
-        const provinceData = await getAreaData().then(data => data.data);
-    let data = provinceData.map(p => ({
-      name: p.provinceShortName,
-      value: p.confirmedCount
-    }));
-    console.log(this.liveData, 'live-data');
+      const provinceData = await getAreaData().then(data => data.data);
+      let data = provinceData.map(p => ({
+        name: p.provinceShortName,
+        value: p.confirmedCount
+      }));
+      console.log(this.liveData, "live-data");
       let province = null;
       return {
         visualMap: {
