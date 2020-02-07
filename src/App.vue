@@ -3,6 +3,7 @@
     <Home></Home>
     <Rate />
     <Hospital />
+    <!-- <City /> -->
   </div>
 </template>
 
@@ -10,13 +11,15 @@
 import Rate from "./components/Rate.vue";
 import Home from "./components/home";
 import Hospital from "./components/Hospital";
+// import City from "./components/city/City";
 
 export default {
   name: "app",
   components: {
     Home,
     Rate,
-    Hospital
+    Hospital,
+    // City,
   }
 };
 </script>

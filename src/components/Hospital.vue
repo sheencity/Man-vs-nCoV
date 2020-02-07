@@ -1,4 +1,5 @@
 <template>
+   <div> 
     <div class="panel-group" id='hospital'>
         <div class="panel panel-default" v-for="province of provinces" :key="province.id">
             <div class="panel-heading">
@@ -9,23 +10,28 @@
                 </div>
             </div>
             <div :id="province.id" class="panel-collapse collapse">
-            <router-link to="/city">
-                <div class="panel-body" v-for="city of province.citys" :key="city.cityCode" >
+                <div class="panel-body" v-for="city of province.citys" :key="city.cityCode"  @click="handleGetCity(city.cityCode)">
                     {{city.cityName}} -- 共{{city.count}}家医院
                 </div>
-            </router-link>
-        </div>
+            </div>
         </div>
     </div>
+    <City  :code="cityId"/>
+   </div> 
 </template>
 
 <script>
     import { getHospitalData } from "../../public/service/getData";
+    import City from "./city/City";
     export default {
         name: "Hospital",
+        components: {
+            City,
+        },
         data() {
             return {
                 provinces: [],
+                cityId: String,
             }
         },
         async mounted() {
@@ -33,7 +39,10 @@
         },
         methods: {
             async getData() {
-                await getHospitalData().then(data => {this.provinces = data.data.data.provinces; console.log(this.provinces)});      
+                await getHospitalData().then(data => this.provinces = data.data.data.provinces);      
+            },
+            handleGetCity(cityCode) {
+                this.cityId = cityCode;
             }
         }
     }
@@ -41,7 +50,7 @@
 
 <style scoped>
     #hospital {
-        height: 100vh;
+        /* height: 100vh; */
         background: url('../assets/blue.png') no-repeat;
         background-size: cover;
     }
