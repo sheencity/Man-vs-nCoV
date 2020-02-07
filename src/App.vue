@@ -1,5 +1,9 @@
 <template>
   <div id="app">
+    <div class="logo">
+      <img alt="Vue logo" src="./assets/logo.png"/>
+      MAN VS NCOV 
+    </div>
     <Home></Home>
     <Rate />
     <Hospital />
@@ -33,5 +37,9 @@ export default {
   color: #2c3e50;
   width: 100%;
   height: 100%;
+}
+.logo {
+  font-size: 150px;
+  font-weight: bolder; 
 }
 </style>

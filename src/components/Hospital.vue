@@ -16,7 +16,7 @@
             </div>
         </div>
     </div>
-    <City  :code="cityId"/>
+    <City  v-bind:code="cityId"/>
    </div> 
 </template>
 
@@ -31,7 +31,7 @@
         data() {
             return {
                 provinces: [],
-                cityId: String,
+                cityId: '',
             }
         },
         async mounted() {

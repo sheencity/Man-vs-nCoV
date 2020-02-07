@@ -11,17 +11,15 @@
 import axios from 'axios';
 export default {
     name: 'City',
-    props: {
-        code: String
-    },
+    props: ["code"],
     data () {
         return {
             hospitals: [],
+            cityCode: '',
         }
     },
     methods: {
         getCityInfo () {
-            console.log(this.code);
             axios.get(`https://card.wecity.qq.com/feverHosp/feverHospList?cityCode=${this.code}&pageIndex=1&pageSize=999&partnerType=4&lat=0&lng=0&searchKey=`)
                 .then(this.handleGetCityInfo)
         },
@@ -30,15 +28,20 @@ export default {
             if (res.data) {
                 const data = res.data;
                 this.hospitals = data.data;
-                console.log(this.hospitals);
             }
         }
     },
-    // watch: {
-    //     code(newValue, oldValue) {
-    //         console.log(newValue);
-    //     }
-    // },
+    watch: {
+        code: {
+            handler(newValue, oldValue) {
+                this.cityCode = newValue;
+                if(newValue !== oldValue) {
+                    this.getCityInfo();
+                }
+            },
+            deep: true
+        }
+    },
     mounted () {
         this.getCityInfo()
     }
